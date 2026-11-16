@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="QA AI Agent — qualidade de pipelines de teste com Jenkins e Jira, acompanhamento em tempo real e análises.">
+<title>QA AI Agent – Demonstração</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src *; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="stylesheet" href="assets/css/00-base.css">
+<link rel="stylesheet" href="assets/css/10-layout.css">
+<link rel="stylesheet" href="assets/css/20-dashboard.css">
+<link rel="stylesheet" href="assets/css/30-tabelas.css">
+<link rel="stylesheet" href="assets/css/40-detalhe.css">
+<link rel="stylesheet" href="assets/css/50-integracoes-config.css">
+<link rel="stylesheet" href="assets/css/55-permissoes.css">
+<link rel="stylesheet" href="assets/css/60-analises.css">
+<link rel="stylesheet" href="assets/css/70-agente.css">
+<link rel="stylesheet" href="assets/css/80-componentes.css">
+<link rel="stylesheet" href="assets/css/90-responsivo.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg width="42" height="38" viewBox="0 0 42 38" aria-hidden="true"><rect x="19.5" y="1" width="3" height="6" rx="1.5" fill="#8f86ff"/><circle cx="21" cy="2.5" r="2.5" fill="#8f86ff"/><rect x="0" y="16" width="5" height="11" rx="2.5" fill="#8f86ff"/><rect x="37" y="16" width="5" height="11" rx="2.5" fill="#8f86ff"/><rect x="4" y="7" width="34" height="28" rx="10" fill="#7b6ff5"/><rect x="9" y="13" width="24" height="16" rx="7" fill="#e9e6ff"/><circle cx="16" cy="21" r="3" fill="#3d32b8"/><circle cx="26" cy="21" r="3" fill="#3d32b8"/></svg>
+      <span class="brand-name">QA AI Agent</span><span class="mvp">MVP</span>
+    </div>
+    <nav class="nav" id="nav" aria-label="Menu principal"></nav>
+    <div class="who" id="who" hidden></div>
+  </aside>
+
+  <main class="main">
+    <!-- 1. DASHBOARD -->
+    <section class="view" id="v-dashboard">
+      <header class="ph">
+        <div><h1>Olá, QA! 👋</h1><p>Acompanhe a qualidade das suas pipelines<span class="ai-only"> e obtenha análises com o agente de IA</span>.</p></div>
+        <div class="top-actions">
+          <a class="period-note" href="#analises" title="Para outros períodos, use Análises"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Últimos 7 dias</a>
+          <button class="avatar" aria-label="Perfil" data-toast="Perfil: QA"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2a2b3f" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg></button>
+        </div>
+      </header>
+      <div class="dash">
+        <div class="stack">
+          <div class="kpis" id="kpis"></div>
+          <div class="row2">
+            <div class="card card-pad"><h2>Evolução da taxa de sucesso</h2><svg id="lineChart" class="chart" viewBox="0 0 480 230" role="img" aria-label="Gráfico da taxa de sucesso"></svg></div>
+            <div class="card card-pad fp-card"><div class="fp-h"><h2>Falhas por pipeline</h2><span class="fp-total" id="fpTotal"></span></div>
+              <div class="fp"><svg id="donut" class="donut" viewBox="0 0 168 168" role="img" aria-label="Distribuição das falhas por pipeline"></svg><ul class="legend" id="legend"></ul></div>
+              <div class="fp-foot"><span id="fpNote"></span><button type="button" class="btn-out pri ai-only" data-ask="Checkout">Analisar com IA</button></div></div>
+          </div>
+          <div class="card card-pad">
+            <h2>Últimas execuções</h2>
+            <div class="table-wrap"><table><thead><tr><th>Pipeline</th><th>Grupo</th><th>Status</th><th>Cenários</th><th>Duração</th><th>Início</th><th></th></tr></thead><tbody id="lastRuns"></tbody></table></div>
+          </div>
+        </div>
+        <div id="agentSlotDash" style="display:flex;min-width:0"></div>
+      </div>
+    </section>
+
+    <!-- 2. PIPELINES -->
+    <section class="view" id="v-pipelines" hidden>
+      <header class="ph"><div><h1>Pipelines</h1><p>Gerencie e acompanhe suas pipelines por grupo.</p></div>
+        <button class="btn-pri" data-open="newPipe"><span aria-hidden="true">+</span> Nova Pipeline</button></header>
+      <div class="card card-pad">
+        <div class="toolbar">
+          <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55576b" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="pSearch" type="search" placeholder="Buscar pipeline..." aria-label="Buscar pipeline"></label>
+          <div class="sel"><select id="pGroup" aria-label="Grupo"></select></div>
+          <div class="sel"><select id="pStatus" aria-label="Status"><option value="">Todos os status</option><option>Sucesso</option><option>Falha</option></select></div>
+          <div class="sel"><select id="pTech" aria-label="Tecnologia"><option value="">Todas as tecnologias</option><option>API</option><option>Mobile</option><option>Web</option></select></div>
+          <div class="seg" id="pView" role="group" aria-label="Visualização"><button type="button" data-pv="pastas" class="on">Por pasta</button><button type="button" data-pv="lista">Lista</button></div>
+        </div>
+        <div id="pipeSummary"></div><div id="pipeFolders"></div>
+        <div class="table-wrap" id="pipeList" hidden><table><thead><tr><th>Pipeline</th><th>Grupo</th><th>Tecnologia</th><th>Última execução</th><th>Status</th><th>Taxa de sucesso</th><th></th></tr></thead><tbody id="pipeRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- 3. EXECUÇÕES -->
+    <section class="view" id="v-execucoes" hidden>
+      <header class="ph"><div><h1>Execuções</h1><p>Histórico e acompanhamento ao vivo das esteiras.</p></div>
+        <label class="btn-pri" tabindex="0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 15V3m0 0-4 4m4-4 4 4M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg> Importar JSON<input id="importJson" type="file" accept=".json,application/json" hidden></label></header>
+      <div class="ptabs" role="tablist"><button type="button" data-go="execucoes" class="on">Histórico</button><button type="button" data-go="aovivo" class=""><span class="live-dot"></span>Ao vivo<span class="tab-count" data-livecount hidden></span></button></div>
+      <div class="card card-pad">
+        <div class="toolbar">
+          <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55576b" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="eSearch" type="search" placeholder="Buscar execução..." aria-label="Buscar execução"></label>
+          <div class="sel"><select id="ePipe" aria-label="Pipeline"></select></div>
+          <div class="sel"><select id="eStatus" aria-label="Status"><option value="">Todos os status</option><option>Sucesso</option><option>Falha</option></select></div>
+          <div class="sel cal"><svg class="ico-cal" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2a2b3f" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><select id="eDays" aria-label="Período"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option><option value="0">Todo o período</option></select></div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th># Execução</th><th>Pipeline</th><th>Status</th><th>Cenários</th><th>Duração</th><th>Início</th></tr></thead><tbody id="execRows"></tbody></table></div>
+        <div class="pager" id="pager"></div>
+      </div>
+    </section>
+
+    <!-- 4. DETALHE DA EXECUÇÃO -->
+    <section class="view" id="v-detalhe" hidden></section>
+
+    <!-- TEMPO REAL -->
+    <section class="view" id="v-aovivo" hidden>
+      <header class="ph"><div><h1>Execuções</h1><p>Histórico e acompanhamento ao vivo das esteiras.</p></div>
+        <div class="ph-actions">
+          <label class="switch-inline"><input type="checkbox" id="lvAuto" checked> Simulação automática</label>
+          <div class="sel"><select id="lvPipe" aria-label="Pipeline para executar"></select></div>
+          <button class="btn-pri" id="lvRunBtn" type="button" data-need="executar"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg> Executar</button></div></header>
+      <div class="ptabs" role="tablist"><button type="button" data-go="execucoes" class="">Histórico</button><button type="button" data-go="aovivo" class="on"><span class="live-dot"></span>Ao vivo<span class="tab-count" data-livecount hidden></span></button></div>
+      <div class="kpis k4" id="lvKpis" style="margin-bottom:22px"></div>
+        <div class="stack">
+          <div><h2 class="lv-sec">Em execução</h2><div class="lv-cards" id="lvRun"></div><p class="empty card" id="lvRunEmpty" hidden>Nenhuma esteira em execução. Escolha uma pipeline e clique em Executar.</p></div>
+          <div><h2 class="lv-sec">Concluídas recentemente</h2><div class="lv-cards" id="lvDone"></div><p class="empty card" id="lvDoneEmpty" hidden>As execuções concluídas aparecem aqui assim que terminam.</p></div>
+        </div>
+      <div class="card feed" style="margin-top:22px"><h2 class="lv-sec">Eventos</h2><ol id="lvFeed"></ol></div>
+    </section>
+
+    <!-- 5. CENÁRIOS -->
+    <section class="view" id="v-cenarios" hidden>
+      <header class="ph"><div><h1>Cenários de Teste</h1><p>Cenários lidos do Jira pela API, com o último resultado de cada um.</p></div>
+        <button class="btn-pri" type="button" id="jiraSync"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16m0 4v-4h-4"/></svg> Atualizar do Jira</button></header>
+      <div class="card card-pad">
+        <div class="jsrc" id="jiraSrc"></div>
+        <div class="toolbar">
+          <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55576b" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="cSearch" type="search" placeholder="Buscar por chave, ID ou nome..." aria-label="Buscar cenário"></label>
+          <div class="sel"><select id="cPipe" aria-label="Componente"></select></div>
+          <div class="sel"><select id="cStatus" aria-label="Status no Jira"></select></div>
+          <div class="sel" id="cCycleBox" hidden><select id="cCycle" aria-label="Ciclo de teste"></select></div>
+          <div class="sel"><select id="cRes" aria-label="Último resultado"><option value="">Todos os resultados</option><option>Sucesso</option><option>Falha</option><option>Sem execução</option></select></div>
+        </div>
+        <div class="jsrc" id="cycSum" hidden></div>
+        <div class="table-wrap"><table><thead><tr><th>Chave Jira</th><th>Cenário</th><th>Componente</th><th>Status no Jira</th><th>Último resultado</th><th id="thCycle" hidden>Ciclos</th></tr></thead><tbody id="scenRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- 6. ANÁLISES -->
+    <section class="view" id="v-analises" hidden>
+      <header class="ph" style="margin-bottom:8px"><div><h1>Análises</h1><p>Indicadores e tendências de qualidade dos testes.</p></div>
+        <div class="sel cal"><svg class="ico-cal" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2a2b3f" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><select id="aPeriod" aria-label="Período"><option value="7">Últimos 7 dias</option><option value="15">Últimos 15 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></div></header>
+      <p class="a-range">Período: <b id="aRange"></b> · vale para as três abas</p>
+      <div class="card card-pad">
+        <div class="tabs" id="aTabs"><button data-t="geral" class="on">Qualidade</button><button data-t="tempo">Tempo de execução</button><button data-t="estab">Estabilidade</button></div>
+        <div id="aBody"></div>
+      </div>
+    </section>
+
+    <!-- 7. AGENTE -->
+    <section class="view" id="v-agente" hidden>
+      <div id="agentSlotFull" style="display:flex;flex-direction:column"></div>
+    </section>
+
+    <!-- 8. INTEGRAÇÕES -->
+    <section class="view" id="v-integracoes" hidden>
+      <header class="ph"><div><h1>Integrações</h1><p>Conecte suas fontes de dados e ferramentas de CI/CD.</p></div></header>
+      <div class="ints" id="ints"></div>
+    </section>
+
+    <!-- 9. CONFIGURAÇÕES -->
+    <section class="view" id="v-config" hidden>
+      <header class="ph"><div><h1>Configurações</h1><p>Ajuste as preferências da aplicação, IA e dados.</p></div></header>
+      <div class="cfg">
+        <div class="card subnav" id="cfgNav"></div>
+        <form class="card card-pad form" id="cfgForm"></form>
+      </div>
+    </section>
+
+    <!-- Painel do agente (movido entre o dashboard e a página do agente) -->
+    <aside class="card agent" id="agentPanel">
+      <div class="agent-h">
+        <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2.5 12 8l5.5 2L12 12l-2 5.5L8 12 2.5 10 8 8z" fill="#5b4bdb"/><path d="M18 13l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#5b4bdb"/></svg>
+        <h2>Agente de QA (IA)</h2><span class="mvp-g">MVP</span>
+        <button class="info" id="infoBtn" aria-label="Sobre o agente"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a2b3f" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v6M12 7.5v.2"/></svg></button>
+      </div>
+      <p class="agent-sub" id="agentSub">Pergunte sobre suas pipelines, execuções e falhas.</p>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <div class="suggest" id="agentSuggest" hidden>
+        <button data-suggest="O que está rodando agora?">O que está rodando agora?</button>
+        <button data-suggest="Existe algum teste instável (flaky)?">Existe algum teste instável (flaky)?</button>
+        <button data-suggest="Resuma a qualidade da release desta semana.">Resuma a qualidade da release desta semana.</button>
+        <button data-suggest="Quais pipelines estão mais lentas?">Quais pipelines estão mais lentas?</button>
+      </div>
+      <form class="composer" id="composer">
+        <div class="in">
+          <svg class="spark" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2.5 12 8l5.5 2L12 12l-2 5.5L8 12 2.5 10 8 8z" fill="#5b4bdb"/><path d="M18 13l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#5b4bdb"/></svg>
+          <input id="ask" autocomplete="off" placeholder="Faça uma pergunta ao agente..." aria-label="Pergunta ao agente">
+        </div>
+        <button class="send" type="submit" aria-label="Enviar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M4 4l17 8-17 8 3-8z"/><path d="M7 12h6"/></svg></button>
+      </form>
+    </aside>
+  </main>
+</div>
+
+<div class="modal" id="modal" hidden><div class="modal-box" role="dialog" aria-modal="true" id="modalBox"></div></div>
+<div class="menu" id="menu" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<!-- Módulos da plataforma: a ordem importa (veja AGENTS.md) -->
+<script src="assets/js/00-base.js"></script>
+<script src="assets/js/01-dados.js"></script>
+<script src="assets/js/10-dashboard.js"></script>
+<script src="assets/js/20-pipelines.js"></script>
+<script src="assets/js/30-execucoes.js"></script>
+<script src="assets/js/31-detalhe.js"></script>
+<script src="assets/js/40-cenarios.js"></script>
+<script src="assets/js/50-analises.js"></script>
+<script src="assets/js/51-analises-tempo.js"></script>
+<script src="assets/js/60-integracoes.js"></script>
+<script src="assets/js/62-integracoes-form.js"></script>
+<script src="assets/js/63-acesso.js"></script>
+<script src="assets/js/70-configuracoes.js"></script>
+<script src="assets/js/71-permissoes.js"></script>
+<script src="assets/js/80-navegacao.js"></script>
+<script src="assets/js/81-acoes.js"></script>
+<script src="assets/js/90-tempo-real.js"></script>
+<script src="assets/js/95-agente-ia.js"></script>
+<script src="assets/js/99-inicio.js"></script>
+<div id="faixa-demo" style="position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9999;background:#14142b;color:#fff;font:600 13px Inter,Arial,sans-serif;padding:10px 18px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.3)">Demonstração com dados de exemplo · sem servidor e sem integrações reais</div>
+</body>
+</html>

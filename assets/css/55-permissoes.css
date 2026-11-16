@@ -1,0 +1,119 @@
+/* Quem sou eu (menu lateral) e a tela Configurações › Permissões */
+.who {
+  margin-top: auto;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.who span {
+  color: var(--sidebar-fg);
+  opacity: 0.85;
+}
+.who small {
+  opacity: 0.65;
+}
+body.no-executar [data-need~='executar'],
+body.no-abrir-bug [data-need~='abrir-bug'],
+body.no-editar-consulta-jira [data-need~='editar-consulta-jira'],
+body.no-gerir-pastas [data-need~='gerir-pastas'],
+body.no-exportar-csv [data-need~='exportar-csv'] {
+  display: none !important;
+}
+.perm-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--line);
+  margin: 8px 0 14px;
+}
+.perm-tabs button {
+  all: unset;
+  cursor: pointer;
+  padding: 8px 14px;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+.perm-tabs button.on {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+.perm-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 10px;
+}
+.perm-head p {
+  margin: 0;
+  flex: 1 1 260px;
+  color: var(--muted);
+}
+.perm-muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+.perm-err {
+  color: var(--red-ink);
+  font-weight: 600;
+}
+.perm-act {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.perm-act .btn-out {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+.chip-s {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+.table-wrap th.c,
+.table-wrap td.c {
+  text-align: center;
+}
+.perm-fs {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin: 0 0 10px;
+}
+.perm-chk {
+  display: block;
+  padding: 3px 0;
+}
+.perm-hist {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.perm-hist time {
+  color: var(--muted);
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.perm-mx table {
+  table-layout: fixed;
+}
+.perm-mx th:first-child {
+  width: 46%;
+}
