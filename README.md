@@ -4,7 +4,7 @@
 ![Integrações](https://img.shields.io/badge/integra%C3%A7%C3%B5es-Jenkins%20%7C%20GitHub%20Actions%20%7C%20Jira-f59e0b)
 ![Dependências](https://img.shields.io/badge/servidor-zero%20depend%C3%AAncias-3b82f6)
 
-**Todos os seus testes em uma única tela.** O QA AI Agent é um portal para acompanhar a qualidade das pipelines de teste automatizado. Ele reúne execuções, cenários, análises e acompanhamento **em tempo real** de Jenkins, GitHub Actions e Jira, com um **agente de IA** que explica falhas e recomenda próximos passos.
+**Todos os seus testes em uma única tela.** O QA AI Agent é um portal para acompanhar a qualidade das pipelines de teste automatizado. Ele reúne execuções, cenários, análises e acompanhamento **em tempo real** de Jenkins, GitHub Actions e Jira, com uma interface de **agente de IA** para perguntar sobre falhas. Nesta versão MVP as respostas do agente usam dados de exemplo; a ligação a um modelo real (OpenAI, Anthropic ou Azure) está no roadmap.
 
 > **Veja a demonstração online:** `https://david-nascimento.github.io/qa-ai-agent-demo/`
 > A demonstração usa dados de exemplo e roda só no navegador, sem servidor e sem integrações reais.
@@ -19,12 +19,12 @@
 
 | Tela | Para que serve |
 |---|---|
-| **Dashboard** | Resumo dos últimos 7 dias e leitura do agente de IA |
+| **Dashboard** | Resumo dos últimos 7 dias, com painel do agente de IA |
 | **Pipelines** | Projetos e componentes, com a contagem por pasta |
 | **Execuções** | Histórico e acompanhamento **ao vivo** |
 | **Cenários** | Cenários do Jira e do Zephyr com o último resultado |
 | **Análises** | Qualidade, tempo de execução e estabilidade |
-| **Agente de QA** | Chat com análises e recomendações |
+| **Agente de QA** | Chat de análises e recomendações (MVP: respostas de exemplo) |
 | **Integrações e Permissões** | Conexões e acesso por pessoa e projeto |
 
 ## Telas
@@ -59,6 +59,7 @@
 
 ## Roadmap
 
+- [ ] Agente de IA ligado a um modelo real (OpenAI, Anthropic ou Azure).
 - [ ] Backend em Elixir: base e contrato de testes prontos; falta portar Jenkins, GitHub e Jira.
 - [ ] Login com SSO.
 - [ ] Meus cards: cada pessoa vê primeiro o que é dela.
