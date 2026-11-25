@@ -1,71 +1,73 @@
 # QA AI Agent
 
+> 🇧🇷 [Leia em português](README.pt-BR.md)
+
 ![Status](https://img.shields.io/badge/status-MVP-5b4bdb)
-![Integrações](https://img.shields.io/badge/integra%C3%A7%C3%B5es-Jenkins%20%7C%20GitHub%20Actions%20%7C%20Jira-f59e0b)
-![Dependências](https://img.shields.io/badge/servidor-zero%20depend%C3%AAncias-3b82f6)
+![Integrations](https://img.shields.io/badge/integrations-Jenkins%20%7C%20GitHub%20Actions%20%7C%20Jira-f59e0b)
+![Dependencies](https://img.shields.io/badge/server-zero%20dependencies-3b82f6)
 
-**Todos os seus testes em uma única tela.** O QA AI Agent é um portal para acompanhar a qualidade das pipelines de teste automatizado. Ele reúne execuções, cenários, análises e acompanhamento **em tempo real** de Jenkins, GitHub Actions e Jira, com uma interface de **agente de IA** para perguntar sobre falhas. Nesta versão MVP as respostas do agente usam dados de exemplo; a ligação a um modelo real (OpenAI, Anthropic ou Azure) está no roadmap.
+**All your test results on a single screen.** QA AI Agent is a web portal to follow the quality of automated test pipelines. It brings runs, scenarios, analytics and **real-time** tracking from Jenkins, GitHub Actions and Jira together, with an **AI agent** interface to ask about failures. In this MVP version the agent's answers use sample data; connecting it to a real model (OpenAI, Anthropic or Azure) is on the roadmap.
 
-> **Veja a demonstração online:** `https://david-nascimento.github.io/qa-ai-agent-demo/`
-> A demonstração usa dados de exemplo e roda só no navegador, sem servidor e sem integrações reais.
+> **Live demo:** https://david-nascimento.github.io/qa-ai-agent-demo/
+> The demo runs entirely in the browser with sample data: no server and no real integrations. It opens in English or Portuguese depending on your browser language, and there is a PT | EN switch in the corner. Tip: open **Runs › Live** and wait about 10 seconds to watch pipelines running.
 
-> **Este repositório é uma vitrine.** O código do portal e do servidor é privado. Veja a [licença](LICENSE).
+> **This repository is a showcase.** The portal and server source code is private. See the [license](LICENSE).
 
 ![Dashboard](docs/img/dashboard.png)
 
 ---
 
-## O que o portal faz
+## What the portal does
 
-| Tela | Para que serve |
+| Screen | What it is for |
 |---|---|
-| **Dashboard** | Resumo dos últimos 7 dias, com painel do agente de IA |
-| **Pipelines** | Projetos e componentes, com a contagem por pasta |
-| **Execuções** | Histórico e acompanhamento **ao vivo** |
-| **Cenários** | Cenários do Jira e do Zephyr com o último resultado |
-| **Análises** | Qualidade, tempo de execução e estabilidade |
-| **Agente de QA** | Chat de análises e recomendações (MVP: respostas de exemplo) |
-| **Integrações e Permissões** | Conexões e acesso por pessoa e projeto |
+| **Dashboard** | Summary of the last 7 days, with an AI agent panel |
+| **Pipelines** | Projects and components, with counts per folder |
+| **Runs** | History and **live** tracking |
+| **Scenarios** | Jira and Zephyr scenarios with the latest result |
+| **Analytics** | Quality, execution time and stability |
+| **QA Agent** | Analysis and recommendations chat (MVP: sample answers) |
+| **Integrations & Permissions** | Connections and per-person, per-project access |
 
-## Telas
+## Screens
 
 ### Pipelines
 ![Pipelines](docs/img/pipelines.png)
 
-### Execuções ao vivo
-![Execuções ao vivo](docs/img/aovivo.png)
+### Live runs
+![Live runs](docs/img/aovivo.png)
 
-### Cenários do Jira e do Zephyr
-![Cenários](docs/img/cenarios.png)
+### Jira and Zephyr scenarios
+![Scenarios](docs/img/cenarios.png)
 
-### Análises
-![Análises](docs/img/analises.png)
+### Analytics
+![Analytics](docs/img/analises.png)
 
-### Agente de QA
-![Agente de QA](docs/img/agente.png)
+### QA Agent
+![QA Agent](docs/img/agente.png)
 
-### Permissões por pessoa e projeto
-![Permissões](docs/img/permissoes.png)
+### Permissions per person and project
+![Permissions](docs/img/permissoes.png)
 
-## Por dentro
+## Under the hood
 
-- **Tempo real** por Server-Sent Events: os eventos chegam sem recarregar a página.
-- **Integrações por API REST** com Jenkins, GitHub Actions e Jira/Zephyr.
-- **Acesso por pessoa**: cada pessoa tem a sua chave, que aparece uma única vez; só o hash é guardado. Papéis e projetos limitam o que cada um enxerga.
-- **Segurança**: HTTPS obrigatório, segredos cifrados com AES-GCM e registro de auditoria.
-- **Zero dependências** no servidor Node e interface em JavaScript puro.
-- **Histórico em SQLite**, com backend alternativo em Elixir em desenvolvimento.
-- **Mapa de funcionalidades** com 137 regras de negócio documentadas.
+- **Real time** through Server-Sent Events: events arrive without reloading the page.
+- **REST API integrations** with Jenkins, GitHub Actions and Jira/Zephyr.
+- **Per-person access**: each person has their own key, shown only once; only its hash is stored. Roles and projects limit what each person sees.
+- **Security**: mandatory HTTPS, secrets encrypted with AES-GCM and an audit log.
+- **Zero dependencies** on the Node server, and a plain JavaScript front-end.
+- **SQLite history**, with an alternative Elixir backend in development.
+- **Functional map** with 137 documented business rules.
 
 ## Roadmap
 
-- [ ] Agente de IA ligado a um modelo real (OpenAI, Anthropic ou Azure).
-- [ ] Backend em Elixir: base e contrato de testes prontos; falta portar Jenkins, GitHub e Jira.
-- [ ] Login com SSO.
-- [ ] Meus cards: cada pessoa vê primeiro o que é dela.
-- [ ] Alertas por e-mail, Slack ou Teams quando uma esteira falhar.
-- [ ] Leitores para GitLab CI e Azure DevOps.
+- [ ] AI agent connected to a real model (OpenAI, Anthropic or Azure).
+- [ ] Elixir backend: foundation and contract tests are ready; Jenkins, GitHub and Jira still need to be ported.
+- [ ] SSO login.
+- [ ] My cards: each person sees their own items first.
+- [ ] Email, Slack or Teams alerts when a pipeline fails.
+- [ ] Readers for GitLab CI and Azure DevOps.
 
-## Contato
+## Contact
 
-Feito por [David Nascimento](https://github.com/David-Nascimento). Para conversar sobre o projeto, abra uma conversa pelo LinkedIn ou deixe um comentário na publicação.
+Built by [David Nascimento](https://github.com/David-Nascimento).
